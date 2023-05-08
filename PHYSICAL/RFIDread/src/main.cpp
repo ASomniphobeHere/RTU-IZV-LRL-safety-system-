@@ -23,7 +23,7 @@ GND - GND
 Leave RST and IRQ unconnected
 
 */
-#define SS_PIN 10 // Chip select
+#define SS_PIN 15 // Chip select
 #define RST_PIN 9 // Redundant
 
 /*
@@ -38,7 +38,7 @@ const char* password = "@skola12";
 WiFiUDP UDP;
 unsigned int port = 34623;  // local port to listen on
 
-char incoming[255];  // buffer for incoming packets
+char incoming[256];  // buffer for incoming packets
 char sendpacket[10];
 
  
@@ -54,11 +54,12 @@ void setup() {
 
     Serial.printf("Connecting to %s ", ssid);
     WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED)
     {
-        delay(500);
+        WiFi.begin(ssid, password);
+        delay(10000);
         Serial.print(".");
+        Serial.print(WiFi.status());
     }
     Serial.println(" connected");
 
@@ -117,7 +118,7 @@ void loop() {
         sendpacket[i] = 0;
     }
     //Change to IP and port of target server
-    UDP.beginPacket("10.109.6.206", 35682);
+    UDP.beginPacket("10.109.6.199", 35682);
     UDP.print(sendpacket);
     UDP.endPacket();
     Serial.println();
